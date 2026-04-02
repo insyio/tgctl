@@ -2,7 +2,7 @@
 
 Declarative Telegram group management. Define your group's topics, permissions, and description in TOML — then plan and apply changes like Terraform.
 
-Uses Telegram Client API (MTProto) via [grammers](https://github.com/nickolay/grammers), not Bot API — can read forum topics, full permissions, and more.
+Uses Telegram Client API (MTProto) via [grammers](https://codeberg.org/Lonami/grammers), not Bot API — can read forum topics, full permissions, and more.
 
 ## Setup
 
