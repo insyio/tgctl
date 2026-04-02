@@ -52,7 +52,7 @@ pub fn diff_group(
             changes: group_changes,
         }));
     } else {
-        actions.push(Action::NoOp(format!("group.{group_name}")));
+        actions.push(Action::NoOp);
     }
 
     diff_topics(group_name, &config.topic, live_topics, &mut actions);
@@ -121,7 +121,7 @@ fn diff_topics(
             }
 
             if changes.is_empty() {
-                actions.push(Action::NoOp(topic_key));
+                actions.push(Action::NoOp);
             } else {
                 actions.push(Action::Update(ResourcePlan {
                     resource_key: topic_key,

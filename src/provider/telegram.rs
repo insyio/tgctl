@@ -225,7 +225,7 @@ impl TelegramProvider {
             Action::Create(plan) => self.apply_create(plan, channel).await,
             Action::Update(plan) => self.apply_update(plan, channel).await,
             Action::Delete(plan) => self.apply_delete(plan, channel).await,
-            Action::NoOp(_) => Ok(()),
+            Action::NoOp => Ok(()),
         }
     }
 

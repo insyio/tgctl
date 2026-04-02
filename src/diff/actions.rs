@@ -5,7 +5,7 @@ pub enum Action {
     Create(ResourcePlan),
     Update(ResourcePlan),
     Delete(ResourcePlan),
-    NoOp(String),
+    NoOp,
 }
 
 #[derive(Debug)]

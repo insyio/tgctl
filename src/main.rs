@@ -69,7 +69,7 @@ async fn cmd_apply(cli: &Cli, auto_approve: bool) -> Result<()> {
 
     let has_changes = all_actions
         .iter()
-        .any(|a| !matches!(a, Action::NoOp(_)));
+        .any(|a| !matches!(a, Action::NoOp));
 
     if !has_changes {
         return Ok(());
@@ -97,13 +97,13 @@ async fn cmd_apply(cli: &Cli, auto_approve: bool) -> Result<()> {
 
         for action in &actions {
             match action {
-                Action::NoOp(_) => {}
+                Action::NoOp => {}
                 _ => {
                     let key = match action {
                         Action::Create(p) | Action::Update(p) | Action::Delete(p) => {
                             &p.resource_key
                         }
-                        Action::NoOp(_) => unreachable!(),
+                        Action::NoOp => unreachable!(),
                     };
                     println!("  Applying: {}", key.bold());
                     provider.apply_action(action, &channel).await?;
@@ -339,7 +339,7 @@ async fn cmd_emoji_search(cli: &Cli, query: &str) -> Result<()> {
     }
 
     println!("Custom emoji for {:?}:\n", query);
-    println!("{:<4} {}", "#", "icon_emoji_id");
+    println!("{:<4} icon_emoji_id", "#");
     println!("{}", "-".repeat(30));
 
     for (i, id) in ids.iter().enumerate() {

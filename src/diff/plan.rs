@@ -20,7 +20,7 @@ pub fn display_plan(actions: &[Action]) {
             Action::Create(plan) => display_create(plan),
             Action::Update(plan) => display_update(plan),
             Action::Delete(plan) => display_delete(plan),
-            Action::NoOp(_) => {}
+            Action::NoOp => {}
         }
     }
 
