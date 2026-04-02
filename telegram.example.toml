@@ -1,0 +1,33 @@
+[provider]
+api_id = 12345
+api_hash = "your_api_hash_here"
+session_file = "tgctl.session"
+
+[group."my-community"]
+chat = "@my_community_group"
+title = "My Community"
+description = "A community for discussing things."
+
+[group."my-community".permissions]
+send_messages = true
+send_media = true
+send_stickers = true
+send_gifs = true
+send_polls = true
+embed_links = true
+invite_users = true
+pin_messages = false
+change_info = false
+
+[[group."my-community".topic]]
+title = "General"
+closed = false
+
+[[group."my-community".topic]]
+title = "Announcements"
+# icon_emoji_id = 5368324170671202286  # custom emoji ID (Telegram Premium)
+closed = false
+
+[[group."my-community".topic]]
+title = "Off-Topic"
+closed = false

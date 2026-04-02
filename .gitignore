@@ -1,0 +1,5 @@
+/target
+*.session
+*.state.json
+.emoji-cache/
+telegram.toml
