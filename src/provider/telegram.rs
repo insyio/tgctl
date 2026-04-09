@@ -515,6 +515,54 @@ impl TelegramProvider {
         }
     }
 
+    pub async fn fetch_members(
+        &self,
+        channel: &tl::types::InputChannel,
+    ) -> Result<Vec<MemberInfo>, ProviderError> {
+        let mut members = Vec::new();
+        let mut offset = 0i32;
+        let limit = 200;
+
+        loop {
+            let result = self
+                .client
+                .invoke(&tl::functions::channels::GetParticipants {
+                    channel: tl::enums::InputChannel::Channel(channel.clone()),
+                    filter: tl::enums::ChannelParticipantsFilter::ChannelParticipantsRecent,
+                    offset,
+                    limit,
+                    hash: 0,
+                })
+                .await?;
+
+            match result {
+                tl::enums::channels::ChannelParticipants::Participants(p) => {
+                    if p.users.is_empty() {
+                        break;
+                    }
+                    for user in &p.users {
+                        if let tl::enums::User::User(u) = user {
+                            if !u.bot {
+                                members.push(MemberInfo {
+                                    user_id: u.id,
+                                    username: u.username.clone(),
+                                    first_name: u.first_name.clone().unwrap_or_default(),
+                                });
+                            }
+                        }
+                    }
+                    if (p.users.len() as i32) < limit {
+                        break;
+                    }
+                    offset += p.users.len() as i32;
+                }
+                tl::enums::channels::ChannelParticipants::NotModified => break,
+            }
+        }
+
+        Ok(members)
+    }
+
     pub async fn download_emoji(
         &self,
         emoji: &EmojiInfo,
@@ -592,6 +640,13 @@ pub struct EmojiInfo {
     pub file_reference: Vec<u8>,
     pub mime_type: String,
     pub emoticon: String,
+}
+
+#[derive(Debug, serde::Serialize)]
+pub struct MemberInfo {
+    pub user_id: i64,
+    pub username: Option<String>,
+    pub first_name: String,
 }
 
 #[derive(Debug)]

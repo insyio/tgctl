@@ -13,7 +13,7 @@ use colored::Colorize;
 use dialoguer::Confirm;
 use grammers_tl_types as tl;
 
-use cli::{Cli, Command, EmojiAction};
+use cli::{Cli, Command, EmojiAction, MembersAction};
 use config::loader::load_config;
 use diff::actions::Action;
 use diff::plan::display_plan;
@@ -36,6 +36,9 @@ async fn main() -> Result<()> {
         Command::Emoji { ref action } => match action {
             EmojiAction::List { ref pack } => cmd_emoji_list(&cli, pack).await,
             EmojiAction::Search { ref query } => cmd_emoji_search(&cli, query).await,
+        },
+        Command::Members { ref action } => match action {
+            MembersAction::List { ref chat } => cmd_members_list(&cli, chat).await,
         },
     }
 }
@@ -180,6 +183,21 @@ async fn cmd_import(cli: &Cli, chat: &str, name: &str) -> Result<()> {
         live_topics.len()
     );
     println!("State saved to {:?}", cli.state);
+
+    Ok(())
+}
+
+async fn cmd_members_list(cli: &Cli, chat: &str) -> Result<()> {
+    let config = load_config(&cli.config).context("Failed to load config")?;
+    let provider = TelegramProvider::connect(&config.provider).await?;
+
+    let channel = provider.resolve_chat(chat).await?;
+    let members = provider.fetch_members(&channel).await?;
+
+    let json = serde_json::to_string_pretty(&members).context("Failed to serialize members")?;
+    println!("{json}");
+
+    eprintln!("{} member(s) listed", members.len());
 
     Ok(())
 }

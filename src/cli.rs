@@ -42,6 +42,11 @@ pub enum Command {
         #[command(subcommand)]
         action: EmojiAction,
     },
+    /// Member utilities
+    Members {
+        #[command(subcommand)]
+        action: MembersAction,
+    },
 }
 
 #[derive(Subcommand)]
@@ -57,5 +62,15 @@ pub enum EmojiAction {
         /// Emoticon to search for (e.g. "📢")
         #[arg(long)]
         query: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum MembersAction {
+    /// List all members of a chat (outputs JSON array of user IDs)
+    List {
+        /// Group username or chat ID
+        #[arg(long, allow_hyphen_values = true)]
+        chat: String,
     },
 }
